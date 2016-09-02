@@ -1,4 +1,4 @@
-module QDB.API (qdbServer) where
+module QDB.API where
 
 import Servant
 
@@ -9,3 +9,6 @@ type API = QuoteAPI
 
 qdbServer :: Server API
 qdbServer = quoteAPI
+
+qdbAPI :: Proxy API
+qdbAPI = Proxy
