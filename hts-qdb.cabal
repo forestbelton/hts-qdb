@@ -16,6 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     QDB.Types
+                     , QDB.Database
                      , QDB.API
                      , QDB.API.Quote
                      , QDB.Model.Quote
