@@ -28,7 +28,12 @@ addQuote (AddQuoteRequest content) = withConnection $
     \conn -> liftIO $ createQuote conn content
 
 editQuote :: Server EditQuote
-editQuote id action = liftIO dummyQuote
+editQuote id action = withConnection $
+    \conn -> do
+        quote' <- liftIO $ finalizeQuote conn id action
+        case quote' of
+            Nothing    -> throwError err400
+            Just quote -> return quote
 
 quoteAPI :: Server QuoteAPI
 quoteAPI = getQuote

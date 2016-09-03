@@ -15,13 +15,15 @@ EOF
 
 export PGPASSWORD="$PASS"
 psql -U $USER qdb <<EOF
-CREATE TABLE quotes(
+CREATE TABLE quotes (
     id BIGSERIAL PRIMARY KEY,
     createdDate TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    state TEXT NOT NULL DEFAULT 'Pending'
 );
 
 CREATE INDEX IF NOT EXISTS quotes_createdDate_idx ON quotes (createdDate);
+CREATE INDEX IF NOT EXISTS quotes_state_idx ON quotes (state);
 
 CREATE TABLE votes (
     id BIGSERIAL PRIMARY KEY,
