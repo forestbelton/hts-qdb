@@ -20,7 +20,8 @@ checkFound :: Maybe a -> Handler a
 checkFound = maybe (throwError err404) return
 
 getQuotes :: Server GetQuotes
-getQuotes sortBy = return []
+getQuotes sortBy = withConnection $
+    \conn -> liftIO $ findQuotes conn sortBy
 
 addQuote :: Server AddQuote
 addQuote (AddQuoteRequest content) = withConnection $

@@ -6,6 +6,7 @@ module QDB.Model.Quote where
 import Data.Aeson.Types
 import Data.Char
 import Data.Maybe
+import Data.Monoid
 import qualified Data.Text as T
 import Data.Time.Clock
 import Database.PostgreSQL.Simple
@@ -50,6 +51,14 @@ instance FromHttpApiData QuoteAction where
 findQuote :: Connection -> ID Quote -> IO (Maybe Quote)
 findQuote conn (ID quoteId) = listToMaybe <$> query conn q (Only quoteId)
     where q = "SELECT id, createdDate, content FROM quotes WHERE id = ?"
+
+findQuotes :: Connection -> SortBy -> IO [Quote]
+findQuotes conn crit = query_ conn q
+    where q = "SELECT id, createdDate, content FROM quotes ORDER BY " `mappend` orderBy
+          orderBy = case crit of
+              Newest -> "createdDate DESC"
+              Top    -> undefined -- TODO
+              Random -> "RANDOM()"
 
 createQuote :: Connection -> T.Text -> IO Quote
 createQuote conn content = do

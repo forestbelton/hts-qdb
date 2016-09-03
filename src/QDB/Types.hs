@@ -19,6 +19,6 @@ instance FromHttpApiData (ID a) where
     parseUrlPiece = fmap ID . readUrlPiece
 
 readUrlPiece :: Read a => T.Text -> Either T.Text a
-readUrlPiece t = case readMaybe $ T.unpack $ T.toLower t of
+readUrlPiece t = case readMaybe $ T.unpack t of
     Nothing -> Left $ T.append "invalid option: " t
     Just a  -> Right a
