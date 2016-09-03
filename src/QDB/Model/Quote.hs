@@ -77,13 +77,22 @@ findQuote conn (ID quoteId) = listToMaybe <$> query conn q (Only quoteId)
                      , "     FROM votes WHERE quoteId = e1.id) e2 ON TRUE"
                      ]
 
+orderBy :: SortBy -> Query
+orderBy Newest = "createdDate DESC"
+orderBy Top    = "(COALESCE(upvotes, 0) - COALESCE(downvotes, 0)) DESC"
+orderBy Random = "RANDOM()"
+
 findQuotes :: Connection -> SortBy -> IO [Quote]
 findQuotes conn crit = query_ conn q
-    where q = "SELECT id, createdDate, content, state FROM quotes WHERE state = 'Approved' ORDER BY " `mappend` orderBy
-          orderBy = case crit of
-              Newest -> "createdDate DESC"
-              Top    -> undefined -- TODO
-              Random -> "RANDOM()"
+    where q = F.fold [ "SELECT id, createdDate, content, state, COALESCE(upvotes, 0) AS upvotes, COALESCE(downvotes, 0) AS downvotes FROM"
+                     , " (SELECT id, createdDate, content, state FROM quotes WHERE state = 'Approved') e1"
+                     , " LEFT JOIN LATERAL ("
+                     , "     SELECT SUM(CASE WHEN type = 'Upvote' THEN 1 ELSE 0 END) AS upvotes,"
+                     , "            SUM(CASE WHEN type = 'Downvote' THEN 1 ELSE 0 END) AS downvotes"
+                     , "     FROM votes WHERE quoteId = e1.id) e2 ON TRUE"
+                     , " ORDER BY "
+                     , orderBy crit
+                     ]
 
 finalizeQuote :: Connection -> ID Quote -> QuoteAction -> IO (Maybe Quote)
 finalizeQuote conn id act = do
