@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module QDB.Server.Quote (quoteAPI) where
 
 import Control.Monad.IO.Class
@@ -8,11 +7,6 @@ import Servant
 import QDB.API.Quote
 import QDB.Model.Quote
 import QDB.Types
-
-dummyQuote :: IO Quote
-dummyQuote = do
-    time <- getCurrentTime
-    return $ Quote (ID 0) time 0 0 ""
 
 getQuote :: Server GetQuote
 getQuote id = liftIO dummyQuote

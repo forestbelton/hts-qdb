@@ -20,6 +20,9 @@ library
                      , QDB.API.Quote
                      , QDB.Model.Quote
                      , QDB.Server.Quote
+                     , QDB.API.Vote
+                     , QDB.Model.Vote
+                     , QDB.Server.Vote
   build-depends:       base >= 4.7 && < 5
                      , servant >= 0.7.1 && < 0.8
                      , servant-server >= 0.7.1 && < 0.8

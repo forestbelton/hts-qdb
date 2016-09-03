@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
-module QDB.Model.Quote (Quote(..), SortBy(..), QuoteAction(..)) where
+{-# LANGUAGE OverloadedStrings #-}
+module QDB.Model.Quote where
 
 import Data.Aeson.Types
 import Data.Char
@@ -17,7 +18,7 @@ data Quote = Quote
     , downvotes   :: Integer
     , content     :: T.Text
     }
-    deriving (Show, Eq, Generic)
+    deriving (Eq, Show, Generic)
 
 instance ToJSON Quote
 
@@ -25,7 +26,7 @@ data SortBy
     = Newest
     | Top
     | Random
-    deriving (Read)
+    deriving (Eq, Show, Read)
 
 instance FromHttpApiData SortBy where
     parseUrlPiece = readUrlPiece
@@ -33,9 +34,12 @@ instance FromHttpApiData SortBy where
 data QuoteAction
     = Approve
     | Deny
-    | Upvote
-    | Downvote
-    deriving (Read)
+    deriving (Eq, Show, Read)
 
 instance FromHttpApiData QuoteAction where
     parseUrlPiece = readUrlPiece
+
+dummyQuote :: IO Quote
+dummyQuote = do
+    time <- getCurrentTime
+    return $ Quote (ID 0) time 0 0 ""
