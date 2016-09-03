@@ -1,11 +1,15 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 module QDB.Model.Vote where
 
+import Data.List
 import Data.Aeson.Types
 import Data.Time.Clock
+import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.FromField
 import GHC.Generics
+import Network.Socket
 import Web.HttpApiData
 
 import QDB.Model.Quote
@@ -39,3 +43,14 @@ instance FromRow Vote where
         <$> (ID <$> field)
         <*> (ID <$> field)
         <*> field
+
+-- TODO: Make total
+showSockAddr :: SockAddr -> String
+showSockAddr (SockAddrInet _ addr) = intercalate "." $ map show [a,b,c,d]
+    where (a,b,c,d) = hostAddressToTuple addr
+
+addVoteToQuote :: Connection -> ID Quote -> VoteType -> SockAddr -> IO (Maybe Quote)
+addVoteToQuote conn qid@(ID quoteId) ty addr = do
+    execute conn q (quoteId, showSockAddr addr, show ty)
+    findQuote conn qid
+  where q = "INSERT INTO votes (quoteId, ipAddress, type) VALUES (?, ?, ?)"
