@@ -18,8 +18,8 @@ connectInfo = defaultConnectInfo
     , connectDatabase = "qdb"
     }
 
-withConnection :: (Connection -> IO a) -> IO a
-withConnection f = do
+withConnection :: MonadIO m => (Connection -> IO a) -> m a
+withConnection f = liftIO $ do
     conn <- connect connectInfo
     x <- f conn
     close conn
@@ -32,8 +32,8 @@ getQuotes :: Server GetQuotes
 getQuotes sortBy = return []
 
 addQuote :: Server AddQuote
-addQuote (AddQuoteRequest content) = liftIO $
-    withConnection $ \conn -> createQuote conn content
+addQuote (AddQuoteRequest content) = withConnection $
+    \conn -> createQuote conn content
 
 editQuote :: Server EditQuote
 editQuote id action = liftIO dummyQuote
