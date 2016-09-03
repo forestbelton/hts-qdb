@@ -5,6 +5,7 @@ module QDB.Model.Quote where
 
 import Data.Aeson.Types
 import Data.Char
+import qualified Data.Foldable as F
 import Data.Maybe
 import Data.Monoid
 import qualified Data.Text as T
@@ -29,6 +30,8 @@ data Quote = Quote
     , createdDate :: UTCTime
     , content     :: T.Text
     , state       :: QuoteState
+    , upvotes     :: Int
+    , downvotes   :: Int
     }
     deriving (Eq, Show, Generic)
 
@@ -40,6 +43,8 @@ instance FromRow Quote where
         <*> field
         <*> field
         <*> (read <$> field)
+        <*> field
+        <*> field
 
 data SortBy
     = Newest
@@ -64,7 +69,13 @@ fromAction Reject  = Rejected
 
 findQuote :: Connection -> ID Quote -> IO (Maybe Quote)
 findQuote conn (ID quoteId) = listToMaybe <$> query conn q (Only quoteId)
-    where q = "SELECT id, createdDate, content, state FROM quotes WHERE id = ?"
+    where q = F.fold [ "SELECT id, createdDate, content, state, upvotes, downvotes FROM"
+                     , " (SELECT id, createdDate, content, state FROM quotes WHERE id = ?) e1"
+                     , " LEFT JOIN LATERAL ("
+                     , "     SELECT SUM(CASE WHEN type = 'Upvote' THEN 1 ELSE 0 END) AS upvotes,"
+                     , "            SUM(CASE WHEN type = 'Downvote' THEN 1 ELSE 0 END) AS downvotes"
+                     , "     FROM votes WHERE quoteId = e1.id) e2 ON TRUE"
+                     ]
 
 findQuotes :: Connection -> SortBy -> IO [Quote]
 findQuotes conn crit = query_ conn q
@@ -94,9 +105,4 @@ updateQuoteState conn (ID quoteId) act = do
 createQuote :: Connection -> T.Text -> IO Quote
 createQuote conn content = do
     [(id, createdDate)] :: [(Integer, UTCTime)] <- query conn "INSERT INTO quotes (content) VALUES (?) RETURNING id, createdDate" (Only content)
-    return $ Quote (ID id) createdDate content Pending
-
-dummyQuote :: IO Quote
-dummyQuote = do
-    time <- getCurrentTime
-    return $ Quote (ID 0) time "" Pending
+    return $ Quote (ID id) createdDate content Pending 0 0
