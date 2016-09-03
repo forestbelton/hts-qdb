@@ -31,6 +31,7 @@ library
                      , aeson >= 0.11.2.1 && < 0.12
                      , http-api-data >= 0.2.4 && < 0.3
                      , transformers >= 0.4.2.0 && < 0.5
+                     , postgresql-simple >= 0.5.2.1 && < 0.6
   default-language:    Haskell2010
 
 executable hts-qdb-exe

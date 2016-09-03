@@ -6,6 +6,7 @@ import Data.Aeson.Types
 import Data.Char
 import qualified Data.Text as T
 import Data.Time.Clock
+import Database.PostgreSQL.Simple.FromRow
 import GHC.Generics
 import Web.HttpApiData
 
@@ -14,13 +15,17 @@ import QDB.Types
 data Quote = Quote
     { id          :: ID Quote
     , createdDate :: UTCTime
-    , upvotes     :: Integer
-    , downvotes   :: Integer
     , content     :: T.Text
     }
     deriving (Eq, Show, Generic)
 
 instance ToJSON Quote
+
+instance FromRow Quote where
+    fromRow = Quote
+        <$> (ID <$> field)
+        <*> field
+        <*> field
 
 data SortBy
     = Newest
@@ -42,4 +47,4 @@ instance FromHttpApiData QuoteAction where
 dummyQuote :: IO Quote
 dummyQuote = do
     time <- getCurrentTime
-    return $ Quote (ID 0) time 0 0 ""
+    return $ Quote (ID 0) time ""
