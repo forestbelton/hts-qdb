@@ -2,11 +2,24 @@ module QDB.Server.Quote (quoteAPI) where
 
 import Control.Monad.IO.Class
 import Data.Time.Clock
+import Database.PostgreSQL.Simple
 import Servant
 
 import QDB.API.Quote
 import QDB.Model.Quote
 import QDB.Types
+
+connectInfo :: ConnectInfo
+connectInfo = defaultConnectInfo
+    { connectHost = "localhost"
+    , connectPort = 5432
+    , connectUser = "ujboldoppi4v4ge7kyfc"
+    , connectPassword = "p1pFM5Cruo9GGFhu3EZt"
+    , connectDatabase = "qdb"
+    }
+
+createConnection :: IO Connection
+createConnection = connect connectInfo
 
 getQuote :: Server GetQuote
 getQuote id = liftIO dummyQuote
@@ -15,7 +28,9 @@ getQuotes :: Server GetQuotes
 getQuotes sortBy = return []
 
 addQuote :: Server AddQuote
-addQuote = liftIO dummyQuote
+addQuote (AddQuoteRequest content) = do
+    conn <- liftIO createConnection
+    liftIO $ createQuote conn content
 
 editQuote :: Server EditQuote
 editQuote id action = liftIO dummyQuote
