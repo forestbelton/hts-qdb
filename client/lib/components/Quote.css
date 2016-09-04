@@ -1,0 +1,47 @@
+.Quote {
+    width: 600px;
+    border: 2px solid #7f8c8d;
+    border-radius: 4px;
+    margin: 0 auto 20px;
+    font: 12px 'Monaco', 'Consolas', 'Inconsolata', sans-serif;
+    color: #ecf0f1;
+}
+
+.Quote-header {
+    padding: 6px;
+    border-bottom: 2px solid #7f8c8d;
+}
+
+.Quote-id {
+    width: 70px;
+    display: inline-block;
+}
+
+.Quote-headerRight {
+    position: relative;
+    float: right;
+}
+
+.Quote-upvotes {
+    color: #2ecc71;
+    margin-right: 10px;
+}
+
+.Quote-upvotes:after {
+    padding-left: 5px;
+    content: "↑";
+}
+
+.Quote-downvotes {
+    color: #e74c3c;
+    margin-right: 10px;
+}
+
+.Quote-downvotes:after {
+    padding-left: 5px;
+    content: "↓";
+}
+
+.Quote-content {
+    padding: 6px;
+}

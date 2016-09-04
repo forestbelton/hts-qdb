@@ -1,0 +1,22 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #34495e;
+}
+
+.Page {
+    text-align: center;
+}
+
+.Page-logo {
+    color: #ecf0f1;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.Page-content {
+    text-align: left;
+}
