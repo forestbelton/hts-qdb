@@ -15,4 +15,4 @@ cd ..
 
 # Build the application
 stack build
-stack exec hts-qdb-exe
+stack exec qdb-exe
