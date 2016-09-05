@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router, Route, hashHistory } from 'react-router';
 
 import Page from './lib/components/Page';
 import Quote from './lib/components/Quote';
@@ -14,6 +15,13 @@ const quotes = [
 ];
 
 ReactDOM.render(
-    <Page quotes={quotes} />,
+    <Router history={hashHistory}>
+        <Route path="/" component={Page}>
+            <Route path="/newest" component={null} />
+            <Route path="/top" component={null} />
+            <Route path="/random" component={null} />
+            <Route path="/new" component={null} />
+        </Route>
+    </Router>,
     document.getElementById('root')
 );

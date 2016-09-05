@@ -38,6 +38,15 @@ body {
     padding-right: 0;
 }
 
+.Page-nav a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.Page-nav a:hover {
+    color: #7f8c8d;
+}
+
 .Page-content {
     text-align: left;
 }

@@ -1,15 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router';
 
 import './Page.css';
 
-import Quote from './Quote';
-import moment from 'moment';
-
-const Page = function(props) {
-    const quotes = props.quotes
-        .map((quote, i) => <div key={i}>{quote}</div>);
-
+export default function(props) {
     return (
         <div className="Page">
             <pre className="Page-logo">
@@ -22,19 +17,13 @@ const Page = function(props) {
 ╚══▀▀═╝ ╚═════╝ ╚═════╝`}
             </pre>
             <ul className="Page-nav">
-                <li>Newest</li>
-                <li>Top</li>
-                <li>Random</li>
+                <li><Link to="/newest">Newest</Link></li>
+                <li><Link to="/top">Top</Link></li>
+                <li><Link to="/random">Random</Link></li>
             </ul>
             <div className="Page-content">
-                {quotes}
+                {props.children}
             </div>
         </div>
     );
-};
-
-Page.propTypes = {
-    quotes: React.PropTypes.arrayOf(Quote).isRequired
-};
-
-export default Page;
+}
