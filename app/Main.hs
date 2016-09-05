@@ -17,4 +17,4 @@ middleware = staticPolicy (addBase "client/static") . logStdout
 main :: IO ()
 main = do
     putStrLn $ "Now listening on port " ++ show port ++ "..."
-    run port $ middleware $ serve qdbAPI qdbServer
+    run port $ middleware $ serveWithContext qdbAPI basicAuthContext qdbServer

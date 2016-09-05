@@ -28,7 +28,7 @@ addQuote (AddQuoteRequest content) = withConnection $
     \conn -> liftIO $ createQuote conn content
 
 editQuote :: Server EditQuote
-editQuote id action = withConnection $
+editQuote id action () = withConnection $
     \conn -> do
         quote' <- liftIO $ finalizeQuote conn id action
         case quote' of

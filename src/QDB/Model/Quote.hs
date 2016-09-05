@@ -69,7 +69,7 @@ fromAction Reject  = Rejected
 
 findQuote :: Connection -> ID Quote -> IO (Maybe Quote)
 findQuote conn (ID quoteId) = listToMaybe <$> query conn q (Only quoteId)
-    where q = F.fold [ "SELECT id, createdDate, content, state, upvotes, downvotes FROM"
+    where q = F.fold [ "SELECT id, createdDate, content, state, COALESCE(upvotes, 0) AS upvotes, COALESCE(downvotes, 0) AS downvotes FROM"
                      , " (SELECT id, createdDate, content, state FROM quotes WHERE id = ?) e1"
                      , " LEFT JOIN LATERAL ("
                      , "     SELECT SUM(CASE WHEN type = 'Upvote' THEN 1 ELSE 0 END) AS upvotes,"
