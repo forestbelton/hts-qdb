@@ -17,9 +17,9 @@ export default function(props) {
 ╚══▀▀═╝ ╚═════╝ ╚═════╝`}
             </pre>
             <ul className="Page-nav">
-                <li><Link to="/newest">Newest</Link></li>
-                <li><Link to="/top">Top</Link></li>
-                <li><Link to="/random">Random</Link></li>
+                <li><Link activeClassName="active" to="/newest">Newest</Link></li>
+                <li><Link activeClassName="active" to="/top">Top</Link></li>
+                <li><Link activeClassName="active" to="/random">Random</Link></li>
             </ul>
             <div className="Page-content">
                 {props.children}

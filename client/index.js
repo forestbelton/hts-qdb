@@ -14,10 +14,10 @@ ReactDOM.render(
     <Router history={hashHistory}>
         <Route path="/" component={Page}>
             <IndexRedirect to="/newest" />
-            <Route path="/newest" component={NewestQuotes} />
-            <Route path="/top" component={TopQuotes} />
-            <Route path="/random" component={RandomQuotes} />
-            <Route path="/new" component={null} />
+            <Route path="newest" component={NewestQuotes} />
+            <Route path="top" component={TopQuotes} />
+            <Route path="random" component={RandomQuotes} />
+            <Route path="new" component={null} />
         </Route>
     </Router>,
     document.getElementById('root')
